@@ -1,32 +1,27 @@
+import { array, object, string, number } from 'zod';
+
+const objectSchema = object(
+    {
+        name: string(),
+        age: number()
+    }
+)
+
+const arraySchema = array(objectSchema).min(1)
+
 export const exercicio3 = (listUsers: InputUser[], findUser: string): null | boolean => {
 
-    
-    if(!Array.isArray(listUsers) || listUsers.length === 0){
-        return null
-    }
-
-    if(typeof findUser !== "string"){
-        return null
-    }
-
-    const listValid = listUsers.map((user, index) => {
+    try {
         
-        if(!user.age || !user.name){
-            return null
-        }
-    
-        if(typeof user.age !== "number" || typeof user.name !== "string"){
-            return null
-        }
-      
-    })
+        arraySchema.parse(listUsers)
+        
+        return listUsers.findIndex(user => user.name.toLowerCase() === findUser.toLowerCase()) > -1 
 
-    
-    if(listValid.filter(user => user === null).length > 0){
+    } catch (error) {
+
         return null
     }
     
-    return listUsers.findIndex(user => user.name.toLowerCase() === findUser.toLowerCase()) > -1 
 }
 
 
